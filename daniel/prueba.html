@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Tech - Auditor Contable</title>
+    <!-- Fuente moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Iconos FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="prueba.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <i class="fas fa-microchip"></i> Happy Tech 1<span>| Auditoría de Gastos</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Panel Izquierdo: Entrada de Datos -->
+        <div class="panel panel-input">
+            <h2><i class="fas fa-file-invoice"></i> Ingresar Gasto</h2>
+            <p class="subtitle">Escriba o pegue la descripción del gasto a auditar.</p>
+            
+            <textarea id="gastoInput" placeholder="Ej: Compra de 10 laptops Lenovo a proveedor TechImport Shenzhen Co. por $8,500 el 15 de marzo 2026 para stock de tienda..."></textarea>
+            
+            <button id="procesarBtn">
+                <i class="fas fa-robot"></i> Analizar Gasto
+            </button>
+        </div>
+
+        <!-- Panel Derecho: Resultados -->
+        <div class="panel panel-output">
+            <h2><i class="fas fa-clipboard-check"></i> Resultado de Auditoría</h2>
+            
+            <div id="pantallaEspera" class="estado-vacio">
+                <i class="fas fa-inbox fa-3x"></i>
+                <p>Esperando descripción de gasto...</p>
+            </div>
+
+            <div id="loading" class="hidden loader-container">
+                <div class="spinner"></div>
+                <p>Aplicando reglas de cumplimiento y análisis...</p>
+            </div>
+            
+            <div id="resultadoTarjeta" class="hidden">
+                <!-- Banner de Estado -->
+                <div class="status-banner" id="statusBanner">
+                    <i id="statusIcon" class="fas fa-check-circle"></i>
+                    <div class="status-text">
+                        <span class="status-title" id="estadoBadge">APROBADO</span>
+                        <span class="status-desc" id="notasVisual">Cumple con todas las políticas de compra.</span>
+                    </div>
+                </div>
+
+                <!-- Cuadrícula visual de datos -->
+                <div class="data-grid">
+                    <div class="data-card">
+                        <span class="data-label">Monto</span>
+                        <span class="data-value" id="valMonto">-</span>
+                    </div>
+                    <div class="data-card">
+                        <span class="data-label">Moneda</span>
+                        <span class="data-value" id="valMoneda">-</span>
+                    </div>
+                    <div class="data-card">
+                        <span class="data-label">Fecha</span>
+                        <span class="data-value" id="valFecha">-</span>
+                    </div>
+                    <div class="data-card">
+                        <span class="data-label">Rubro</span>
+                        <span class="data-value" id="valRubro">-</span>
+                    </div>
+                    <div class="data-card full-width">
+                        <span class="data-label">Proveedor</span>
+                        <span class="data-value" id="valProveedor">-</span>
+                    </div>
+                    <div class="data-card full-width">
+                        <span class="data-label">Concepto</span>
+                        <span class="data-value" id="valConcepto">-</span>
+                    </div>
+                </div>
+
+                <!-- JSON Técnico Acordeón -->
+                <details class="json-details">
+                    <summary><i class="fas fa-code"></i> Ver JSON Estricto</summary>
+                    <pre id="jsonOutput"></pre>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <script src="lg.js"></script>
+</body>
+</html>
