@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Tech - Auditor Contable</title>
+
+  <!-- Fuente moderna -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Estilos locales -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" aria-hidden="true">
+      <i class="fas fa-microchip" aria-hidden="true"></i>
+      <div class="brand-text">
+        <span class="title">Happy Tech</span>
+        <span class="subtitle">Auditoría de Gastos</span>
+      </div>
+    </div>
+
+    <nav class="top-actions" role="navigation" aria-label="Acciones principales">
+      <button id="themeToggle" class="btn ghost" title="Cambiar tema (T)" aria-pressed="false">
+        <i id="themeIcon" class="fas fa-moon"></i>
+        <span id="themeLabel">Modo Oscuro</span>
+      </button>
+
+      <button id="btnExportJSON" class="btn ghost" title="Exportar todo como JSON"><i class="fas fa-file-export"></i> Exportar JSON</button>
+      <button id="btnExportCSV" class="btn ghost" title="Exportar todo como CSV"><i class="fas fa-file-csv"></i> Exportar CSV</button>
+      <button id="btnClearAll" class="btn danger" title="Eliminar todos los registros"><i class="fas fa-trash-alt"></i> Limpiar</button>
+    </nav>
+  </header>
+
+  <main class="layout" id="appRoot">
+    <!-- Panel Izquierdo -->
+    <section class="panel panel-left">
+      <h2><i class="fas fa-file-invoice"></i> Ingresar Gasto</h2>
+      <p class="muted">Escribe o pega la descripción del gasto. Puedes subir un archivo Excel con múltiples filas.</p>
+
+      <label class="field">
+        <span class="label">Descripción</span>
+        <textarea id="gastoInput" placeholder="Ej: Compra de 10 laptops Lenovo a proveedor TechImport Shenzhen Co. por $8,500 el 15 de marzo 2026..."></textarea>
+      </label>
+
+      <div class="row">
+        <label class="field small">
+          <span class="label">Fecha</span>
+          <input id="fechaInput" type="date" />
+        </label>
+        <label class="field small">
+          <span class="label">Monto</span>
+          <input id="montoInput" type="number" step="0.01" placeholder="0.00" />
+        </label>
+        <label class="field small">
+          <span class="label">Moneda</span>
+          <select id="monedaInput">
+            <option value="USD">USD</option>
+            <option value="CRC">CRC</option>
+            <option value="EUR">EUR</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="procesarBtn" class="btn primary"><i class="fas fa-robot"></i> Analizar Gasto</button>
+        <button id="addManualBtn" class="btn outline"><i class="fas fa-plus"></i> Agregar manual</button>
+      </div>
+
+      <hr />
+
+      <h3><i class="fas fa-file-upload"></i> Subir archivo Excel</h3>
+      <p class="muted">Soporta archivos .xlsx y .csv. Columnas esperadas: descripcion, fecha, monto, moneda, proveedor (opcional).</p>
+
+      <div class="upload-area" id="uploadArea">
+        <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" />
+        <div class="drop-hint">Arrastra y suelta aquí o haz clic para seleccionar archivo</div>
+      </div>
+
+      <div id="uploadLog" class="muted small" aria-live="polite"></div>
+    </section>
+
+    <!-- Panel Derecho -->
+    <section class="panel panel-right">
+      <h2><i class="fas fa-clipboard-check"></i> Resultado de Auditoría</h2>
+
+      <div id="pantallaEspera" class="estado-vacio">
+        <p>Esperando descripción de gasto o archivo...</p>
+      </div>
+
+      
+
+      <div id="resultadoTarjeta" class="hidden card" aria-live="polite">
+        <div class="status" id="statusBanner">
+          <i id="statusIcon" class="fas fa-check-circle" aria-hidden="true"></i>
+          <div>
+            <div id="estadoBadge" class="status-title">APROBADO</div>
+            <div id="notasVisual" class="muted">Cumple con las políticas</div>
+          </div>
+        </div>
+
+        <div class="data-grid" id="dataGrid">
+          <div class="data-row"><strong>Monto</strong><span id="valMonto">-</span></div>
+          <div class="data-row"><strong>Moneda</strong><span id="valMoneda">-</span></div>
+          <div class="data-row"><strong>Fecha</strong><span id="valFecha">-</span></div>
+          <div class="data-row"><strong>Rubro</strong><span id="valRubro">-</span></div>
+          <div class="data-row full"><strong>Proveedor</strong><span id="valProveedor">-</span></div>
+          <div class="data-row full"><strong>Concepto</strong><span id="valConcepto">-</span></div>
+        </div>
+
+        <details class="json-details">
+          <summary><i class="fas fa-code"></i> Ver JSON Estricto</summary>
+          <pre id="jsonOutput" class="json"></pre>
+        </details>
+      </div>
+
+      <hr />
+
+      <h3><i class="fas fa-table"></i> Tabla de registros</h3>
+      <div class="table-wrap">
+        <table id="recordsTable" class="records" aria-live="polite">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Moneda</th>
+              <th>Rubro</th>
+              <th>Proveedor</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer muted">
+    <div>Proyecto Happy Tech · Auditoría de Gastos · <strong>No incluir artículos de procedencia China</strong></div>
+    <div class="muted small">Guardado local automático en el navegador</div>
+  </footer>
+
+  <!-- Librería SheetJS para leer Excel en cliente -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
